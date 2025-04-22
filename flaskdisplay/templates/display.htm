@@ -1,0 +1,242 @@
+<!-- version 1.0.0 -->
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/vcocr/static/modal.css">
+</head>
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<style>
+    img {
+        user-drag: none;
+        -webkit-user-drag: none;
+    }   
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+    @media (orientation: portrait) {
+        #display {
+            position: fixed;   /* Makes the image stay in place during scroll */
+            top: 5vh;
+            left: 0;
+            width: 100vw;      /* 100% of the viewport width */
+            height: 40vh;     /* 100% of the viewport height */
+            object-fit: contain; /* Cover the container without distorting the ratio */
+            z-index: 1;       /* Optional: sends the image to the back if you have other content */
+        }
+        #status {
+            position: fixed;
+            top:45vh;
+        }
+    }
+    @media (orientation: landscape) {
+        #display {
+            position: fixed;   /* Makes the image stay in place during scroll */
+            top: 5vh;
+            left: 0;
+            width: 100vw;      /* 100% of the viewport width */
+            height: 80vh;     /* 100% of the viewport height */
+            object-fit: contain; /* Cover the container without distorting the ratio */
+            z-index: 1;       /* Optional: sends the image to the back if you have other content */
+        }
+        #status {
+            position: fixed;
+            top:85vh;
+        }
+    }
+</style>
+<input id="hiddeninput">
+<img id="display" src="image.jpg" alt="Image Description">
+<div id="status">
+<script>
+    /*$('#display').click(function(event){
+        const img=$(this);
+
+        // Calculate the position of the click relative to the image
+        const rect = this.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        // Normalize the coordinates
+        const relativeX = x / img.width()*1.0;
+        const relativeY = y / img.height()*1.0;
+
+        // Construct the URL
+        const url = `click/${relativeX}/${relativeY}`;
+        console.log(`get ${url}`);
+        // Send an AJAX GET request
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                console.log('Server responded:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('An error occurred:', error);
+            }
+        });
+    });*/
+    
+    $('#display').click(function(event) {
+        // Get the size and position of the container
+        var container = $(this);
+        var containerWidth = container.width();
+        var containerHeight = container.height();
+        var containerOffset = container.offset();
+
+        // Create an image object to get natural dimensions
+        var img = new Image();
+        img.src = $(this).attr('src');
+        var imgNaturalWidth = img.naturalWidth;
+        var imgNaturalHeight = img.naturalHeight;
+
+        // Calculate the ratio of the natural dimensions to the container dimensions
+        var widthRatio = containerWidth / imgNaturalWidth;
+        var heightRatio = containerHeight / imgNaturalHeight;
+        var fitRatio = Math.min(widthRatio, heightRatio);
+
+        // Calculate the actual displayed dimensions of the image
+        var displayWidth = imgNaturalWidth * fitRatio;
+        var displayHeight = imgNaturalHeight * fitRatio;
+
+        // Calculate the top and left offsets inside the container (if any)
+        var imageOffsetLeft = (containerWidth - displayWidth) / 2;
+        var imageOffsetTop = (containerHeight - displayHeight) / 2;
+
+        // Calculate the x and y relative to the image
+        var x = event.pageX - containerOffset.left - imageOffsetLeft;
+        var y = event.pageY - containerOffset.top - imageOffsetTop;
+
+        // Normalize the coordinates
+        const relativeX = x / displayWidth*1.0;
+        const relativeY = y / displayHeight*1.0;
+        // Construct the URL
+        const url = `click/${relativeX}/${relativeY}`;
+        console.log(`get ${url}`);
+        // Send an AJAX GET request
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                console.log('Server responded:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('An error occurred:', error);
+            }
+        });
+    });
+    function handlekeypress(e){
+        if (e.key=='`'){
+            var command=prompt('enter command')
+            if (command!==null){
+                var url = `command?k=${command}`;
+                // Send an AJAX GET request
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('Server responded:', response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error sending keycode:', error);
+                    }
+                });
+            }
+            e.preventDefault()            
+            return
+        }
+        //var keyCode = e.key.charCodeAt(0); // or event.keyCode for older browsers
+	    var keyCode = e.keyCode
+        if(e.key==="Delete")keyCode=127
+        var url = `keypress/${keyCode}`;
+        console.log(url)
+        // Send an AJAX GET request
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                console.log('Server responded:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error sending keycode:', error);
+            }
+        });
+        e.preventDefault()    
+    }
+    document.body.addEventListener('keydown', function(e) {
+	if([27,13,8,37,38,39,40,46].indexOf(e.keyCode)>=0) handlekeypress(e)
+    });
+    document.body.addEventListener('keypress', function(e) {
+
+	if(!([27,13,8,16,37,38,39,40].indexOf(e.keyCode)>=0)) handlekeypress(e)
+    });
+    document.getElementById('hiddeninput').addEventListener('textInput', function(e) {
+        e.key=e.data
+        handlekeypress(e)
+    });
+    /*
+    $(document).on('keypress', function(event) {
+        const keyCode = event.which; // or event.keyCode for older browsers
+        const url = `keypress/${keyCode}`;
+        // Send an AJAX GET request
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                console.log('Server responded:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error sending keycode:', error);
+            }
+        });
+        event.preventDefault()
+    });*/
+    
+    $(document).ready(function() {
+        lastTimestamp = null; // Store the last timestamp
+        function pollServerForChanges() {
+            //$('#hiddeninput').focus()
+            $.ajax({
+                url: 'status',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if($('#status').html()!=data['response'])$('#status').html(data['response'])
+                },
+                error: function() {
+                    console.error('Error polling the server');
+                }
+            });
+            $.ajax({
+                url: 'poll',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (lastTimestamp === null || lastTimestamp !== data.T) {
+                        lastTimestamp = data.T;
+                        imagew=data.w
+                        imageh=data.h
+                        // Reload the image
+                        $('#display').attr('src', `image.jpg?${data.T}`); // Cache busting              
+                    }
+                },
+                error: function() {
+                    console.error('Error polling the server');
+                }
+            });
+        }
+
+        // Start polling the server every 5000 milliseconds (5 seconds)
+        setInterval(pollServerForChanges, 100);
+    });
+    
+//edit order
+//add box
+//rm box
+//select start
+//select end
+</script>

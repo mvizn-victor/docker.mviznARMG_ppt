@@ -1,0 +1,45 @@
+20191224: 
+added log for data sent from VA to PLC
+change clps to initialise process before landed signal go off to reduce delay
+disable clps after plc.speed<0
+ignore blank images from framesharer
+camdriverraw tindex from jpeg
+sleep 0.1 after image comm loss
+
+
+20191227:
+HNCDS digital zoom to around cabin and ignore a,c,h hits only detect p if within +/- cabin width
+PMNRS and HNCDS to focus only leftmost cabin for landside and rightmost cabin for seaside
+to save plc.dat for offline testing
+  touch /tmp/saveplc
+will be saved to ~/Code/mviznARMG/plc.dat
+to simulate job offline
+  cp plc.dat /tmp/plc.dat
+to stop job simulation
+  rm /tmp/plc.dat
+  
+untitled.ipynb #test delete folders by date
+
+20191230:
+TCDS
+#minhits=2 corner detection minimum hits for 45feet corner detection
+#subyolo sum(score>0)>=1 in 2
+#if frameshape invalid don't add to corner detection
+workflow.py
+#JOBDATE and JOBTIME
+
+2020-01-17:
+TCDS:
+detection requires 2 distinct y positions for non panning cameras
+HNCDS:
+fix detection when human beside cabin
+workflow:
+disable trigger when job ends
+
+2020-01-21:
+TCDS:
+ptz tilt up by +6 for night non panning cameras
+
+2020-01-22:
+TCDS:
+fixed negative log

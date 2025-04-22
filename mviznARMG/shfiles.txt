@@ -1,0 +1,14 @@
+./endjob.sh
+./killall.sh
+./PMNRS/tfserve.sh
+./psfaux.sh
+./rerun.sh
+./restarter.sh
+./rsyncfromdate.sh
+./rsynconstart.sh
+./run2.sh
+./run.sh
+./tfserve.sh
+./undoupdatecam.sh
+./viewlogs.sh
+./viewshm.sh

@@ -1,0 +1,8 @@
+logrotate state -- version 2
+"/opt/captures/screenlogs/QCgantry_UI/log.txt" 2025-3-4-13:58:14
+"/opt/captures/screenlogs/framestitch2/log.txt" 2025-3-4-13:58:14
+"/opt/captures/screenlogs/QCgantry_framesharer/log.txt" 2025-3-4-13:58:14
+"/opt/captures/screenlogs/QCgantry_infererFB/log.txt" 2025-3-4-13:58:14
+"/opt/captures/screenlogs/QCgantry_logger/log.txt" 2025-3-4-13:58:14
+"/opt/captures/screenlogs/plcclient/log.txt" 2025-3-4-13:58:14
+"/opt/captures/screenlogs/framesharer/log.txt" 2025-3-4-13:58:14

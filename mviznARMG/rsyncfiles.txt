@@ -1,0 +1,6 @@
+HNCDS/hncdstop.py
+HNCDS/hncdsside.py
+PMNRS/pmnrstop.py
+PMNRS/pmnrsside.py
+CLPS/clps.py
+rsyncfiles.txt

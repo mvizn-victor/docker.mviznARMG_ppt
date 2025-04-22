@@ -1,0 +1,4 @@
+run mvizn va
+gnome-terminal --title=workflow -- bash /home/mvizn/Code/mviznARMG/run.sh main
+rsync on start
+gnome-terminal --title=rsync -- bash /home/mvizn/rsynconstart.sh

@@ -1,0 +1,78 @@
+./armgws/armgwsconfig.py:#version:1
+./armgws/armgws.py:#version:1
+./armgws/event.py:#version:1
+./calc_seoho_offsets.py:#version:1
+./camdiagnostics/camchecker.py:#version:ff13
+./camdiagnostics/camverify.py:#version:1
+./countproc.py:#version:ehz
+./CDODS/cdods.py:#version:1
+./checknvidiasmi.py:#version:1
+./CLPS/clps_maskrcnn_loop.py:#version:1
+./CLPS/clps.py:#version:fcj
+./CLPS/clpsptz.py:#version:1
+./CLPS/detect.py:#version:1
+./CLPS/piggyback.py:#version:1
+./HNCDS/detect.py:#version:1
+./HNCDS/hncdsinception.py:#version:1
+./HNCDS/hncdsside.py:#version:fi21
+./HNCDS/hncdssideyolo.py:#version:1
+./HNCDS/hncdstop.py:#version:fi21
+./HNCDS/hncdstopyolo.py:#version:fi21
+./memcachehelper/memcacheresp.py:#version:1
+./memcachehelper/memcacheRW.py:#version:1
+./PMNRS/cabindetect.py:#version:1
+./PMNRS/pmnrsside.py:#version:1
+./PMNRS/pmnrstop.py:#version:fi21
+./PMNRS/textboxdetector.py:#version:1
+./PMNRS/textdetect.py:#version:1
+./Processor/camDriverRaw.py:#version:ff30
+./Processor/framesharer.py:#version:1
+./Processor/plcclient.py:#version:fi21
+./Processor/workflow.py:#version:fg15
+./TCDS/tcdsptz.py:#version:fi30
+./TCDS/tcds.py:#version:fh31
+./TCDS/tcdstx.py:#version:fh31
+./tfstuff/hncdsinfer.py:#version:1
+./tfstuff/waterdropinfer.py:#version:1
+./updatecam.py:#version:1
+./updatecam_seohomethod.py:#version:1
+./Utils/cv2dnn.py:#version:1
+./Utils/helper.py:#version:fg25
+./viewshm2.py:#version:1
+./viewshm.py:#version:1
+./yolohelper/detect2.py:#version:1
+./yolohelper/detect3.py:#version:1
+./yolohelper/detect.py:#version:1
+./endjob.sh:#version:1
+./killall.sh:#version:1
+./PMNRS/tfserve.sh:#version:1
+./psfaux.sh:#version:1
+./rerun.sh:#version:1
+./restarter.sh:#version:1
+./rsyncfromdate.sh:#version:1
+./rsynconstart.sh:#version:1
+./run2.sh:#version:ehz
+./run.sh:#version:ehz
+./tfserve.sh:#version:1
+./undoupdatecam.sh:#version:1
+./viewlogs.sh:#version:1
+./viewshm.sh:#version:1
+./cron.txt:#version:ehz
+2512f69f3e20caef965f4e548bd96513  ./camdiagnostics/weights/waterdrop.pb
+926f9afacfb7a427549ab42d13ba59f2  ./CDODS/weights/CDODS.weights
+60f2590b3fc9a10f88a27da6caf8b0e1  ./CLPS/weights/clps_pointrend.pth
+059435fc438cdf0839d71dc4f88bee15  ./CLPS/weights/clpslift.pb
+b2d42d52675649825af1fa6ae1ec5255  ./HNCDS/weights/HNCDS.pb
+957ef8ca36573fa91cfd4241e7a29adc  ./HNCDS/weights/HNCDSside.weights
+e17b5a2dafdbaf9f66ec093988c21bcf  ./HNCDS/weights/HNCDS.weights
+7c17f60c97405972e79a406f681e232a  ./mrcnn_serving_ready/frozen_model/mask_frozen_graph.pb
+44fd37873ba2eadc390295b624425c2a  ./mrcnn_serving_ready/serving_model/1/saved_model.pb
+cc914f6941f2d23787a123d055e4b8a6  ./PMNRS/weights/aocr/1/saved_model.pb
+8a9b7f2ebd9bcf8212bfa856b065e6f0  ./PMNRS/weights/frozen_east_text_detection.pb
+c3843c867a00aab207ce3220b8081be3  ./PMNRS/weights/PMNRS2.weights
+9ebb35c05db00e149d1f2eae37ba8cf1  ./PMNRS/weights/PMNRS_lp.weights
+ef70331f7e46120b45642e0ff6affc35  ./PMNRS/weights/PMNRS.pb
+cb82ba2df0c7b12038e6aa995acc8ad3  ./PMNRS/weights/PMNRS.weights
+15ece5d61311191ab9425872525d7445  ./TCDS/weights/TCDSnp.weights
+1a8be44f2060ebc09c9cf2efd08451ab  ./TCDS/weights/TCDSsubyolo.weights
+f9524bdf1f33e6e47bb872086f50ecee  ./TCDS/weights/TCDStx.weights

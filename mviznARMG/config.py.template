@@ -1,0 +1,44 @@
+from Utils.helper import *
+from config.cornerx import cornerx
+TCP_IP = '10.148.76.98'
+#TCP_IP='localhost'
+TCP_PORT = 2009
+
+#ovtrls=AxisCamera('10.140.48.131','root','pass')
+$S1
+axis=AxisCamera('192.168.10.132','root','pass')
+camidip="""
+$S2
+""".strip()
+
+#codec='h264'
+codec='mjpg'
+if 0:
+    pass
+elif 1:
+    videoinput=[]
+    for line in camidip.split('\n'):
+        camid,camip=line.split()
+        if camid.startswith('#'):continue
+        if camid.startswith('cn'):
+            if codec=='h264':
+                videoinput.append([camid,f'rtsp://root:pass@{camip}/axis-media/media.amp?videocodec=h264&videomaxbitrate=1024&fps=25&resolution=1280x720'])
+            else:
+                videoinput.append([camid,f'!root:pass@{camip}:10'])
+        else:
+            if codec=='h264':            
+                videoinput.append([camid,f'rtsp://root:pass@{camip}/axis-media/media.amp?videocodec=h264&videomaxbitrate=1024&fps=25'])
+            else:
+                videoinput.append([camid,f'!root:pass@{camip}:5'])
+        if 0: #DIVA
+            if camid.startswith('ovtr'):
+                videoinput[-1].append((720,1280))
+            else:
+                videoinput[-1].append((1280,720))
+else:
+    videoinput=[]
+    for line in camidip.split('\n'):
+        camid,camip=line.split()
+        if camid.startswith('#'):continue
+        videoinput.append([camid,f'/mnt/NFSDIR/RawVideos/ARMG/7110/2019-08-23/{camid}-11_00.mp4'])
+

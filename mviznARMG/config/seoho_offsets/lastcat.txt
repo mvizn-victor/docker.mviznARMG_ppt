@@ -1,0 +1,321 @@
+[Center]
+LS_Center_Pan_Offset = 105.2361
+LS_Center_Tilt_Offset = 11.4672
+
+Preset_List1 = 40.1047^-17.0727^1
+Preset_List2 = 38.5662^-36.1883^1
+Preset_List3 = 44.7953^-48.20^1
+Preset_List4 = 97.4281^-24.4^1
+Preset_List5 = 99.0016^-32.7^1
+Preset_List6 = 100.2543^-46.536^1
+Preset_List7 = 
+Preset_List8 = 
+Preset_List9 = 
+Preset_List10 = 
+Preset_List11 = 
+Preset_List12 = 
+Preset_List13 = 
+Preset_List14 = 
+Preset_List15 = 
+Preset_List16 = 
+Preset_List17 = 
+Preset_List18 = 
+Preset_List19 = 
+Preset_List20 = 
+Preset_List21 = 
+Preset_List22 = 
+Preset_List23 = 
+Preset_List24 = 
+Preset_List25 = 
+Preset_List26 = 
+Preset_List27 = 
+Preset_List28 = 
+Preset_List29 = 
+Preset_List30 = 
+
+
+; Preset Max = 256
+; Preset_List1 = Pan_Value(-180 ~ 180)^Tilt_Value(0 ~ 90) ^Zoom_Value(0001 ~ 9999)
+; ex) Preset_List1 = 10.1^80.5 ^1000[Front]
+LS_Front_Pan_Offset = -89.8707
+LS_Front_Tilt_Offset = -0.9250
+
+
+;20ft 
+Preset_List1 = 0.1^-7.5^200
+Preset_List2 = 0.1^-27.0901^200
+Preset_List3 = 0.1^-29.2804^250
+Preset_List4 = 0.1^-42^265
+
+;40ft
+Preset_List5 = -0.16^-44.5844^1
+Preset_List6 = -0.61^-63.2626^350
+
+;45ft
+Preset_List7 = 0.1401^-49.1^1
+Preset_List10 = 0.547^-64.833^220
+
+
+; Gantry stop hard codeing
+Preset_List8 = 164.0987^-36.5542^1
+;Gantry forword hard codeing
+Preset_List9 = 6.3962^-11.3223^1
+
+
+
+Preset_List11 = 
+Preset_List12 = 
+Preset_List13 = 
+Preset_List14 = 
+Preset_List15 = 
+Preset_List16 = 
+Preset_List17 = 
+Preset_List18 = 
+Preset_List19 = 
+Preset_List20 = 
+Preset_List21 = 
+Preset_List22 = 
+Preset_List23 = 
+Preset_List24 = 
+Preset_List25 = 
+Preset_List26 = 
+Preset_List27 = 
+Preset_List28 = 
+Preset_List29 = 
+Preset_List30 = 
+
+; Preset Max = 256
+; Preset_List1 = Pan_Value(-180 ~ 180)^Tilt_Value(0 ~ 90) ^Zoom_Value(0001 ~ 9999)
+; ex) Preset_List1 = 10.1^80.5 ^1000[Rear]
+LS_Rear_Pan_Offset = -154.31
+LS_Rear_Tilt_Offset = 0.68
+
+;20ft
+Preset_List1 = 0.1^-8.6343^150
+Preset_List2 = 0.1^-31.0205^200
+Preset_List3 = 0.1^-32.9862^200
+Preset_List4 = 0.1^-45.5862^200
+
+;40ft
+Preset_List5 = 0.1^-53.1080^1
+Preset_List6 = 0.1^-71.6352^200
+
+;45ft 
+Preset_List7 = 0.6^-59.8080^1
+Preset_List10 = 0.6^-74.2233^200
+
+; Gantry stop hard codeing
+Preset_List8 = 191.1569^-37.1569^1
+;Gantry forword hard codeing
+Preset_List9 = -8.0444^-10.6799^1
+
+
+
+Preset_List11 = 
+Preset_List12 =
+Preset_List13 = 
+Preset_List14 = 
+Preset_List15 = 
+Preset_List16 = 
+Preset_List17 = 
+Preset_List18 = 
+Preset_List19 = 
+Preset_List20 = 
+Preset_List21 = 
+Preset_List22 = 
+Preset_List23 = 
+Preset_List24 = 
+Preset_List25 = 
+Preset_List26 = 
+Preset_List27 = 
+Preset_List28 = 
+Preset_List29 = 
+Preset_List30 = 
+
+
+; Preset Max = 256
+; Preset_List1 = Pan_Value(-180 ~ 180)^Tilt_Value(0 ~ 90) ^Zoom_Value(0001 ~ 9999)
+; ex) Preset_List1 = 10.1^80.5 ^1000
+[Trolley]
+Trolley_Landside_Pan = -119.1422
+Trolley_Landside_Tilt = -81.9053
+Trolley_Landside_Zoom = 120
+
+Trolley_Seaside_Pan =  0.6586
+Trolley_Seaside_Tilt = -83.0226
+Trolley_Seaside_Zoom = 120
+
+[PM_Camera]
+;OVLS, OVSS Position
+LS_PM_Pan= 178.3013
+LS_PM_Tilt= -91.8000
+LS_PM_Zoom = 100
+
+SS_PM_Pan= 179.4544
+SS_PM_Tilt= -90.8100
+SS_PM_Zoom = 100
+
+;20ft Front job Position
+LS_PM_Pan_20F= 178.3013
+LS_PM_Tilt_20F= -95.8000
+LS_PM_Zoom_20F = 225
+
+SS_PM_Pan_20F= 179.4544
+SS_PM_Tilt_20F= -94.8100
+SS_PM_Zoom_20F = 225
+
+;4Xft job Position
+LS_PM_Pan_4Xft= 178.3013
+LS_PM_Tilt_4Xft= -87.8000
+LS_PM_Zoom_4Xft = 225
+
+SS_PM_Pan_4Xft= 179.4544
+SS_PM_Tilt_4Xft= -86.8100
+SS_PM_Zoom_4Xft = 225
+
+;20ft Rear job Position
+LS_PM_Pan_20R= 178.3013
+LS_PM_Tilt_20R= -80.8000
+LS_PM_Zoom_20R = 225
+
+SS_PM_Pan_20R= 178.2393
+SS_PM_Tilt_20R= -79.7251
+SS_PM_Zoom_20R = 225[Center]
+SS_Center_Pan_Offset = 104.9445
+SS_Center_Tilt_Offset = 6.1600
+
+Preset_List1 = 42.4866^-18.3^1
+Preset_List2 = 50.6966^-35.5968^1
+Preset_List3 = 41.7636^-45.3183^1
+Preset_List4 = 94.3^-8.7^1
+Preset_List5 = 100.2^-29.44^1
+Preset_List6 = 100.2^-43.916^1
+Preset_List7 = 
+Preset_List8 = 
+Preset_List9 =
+Preset_List10 =
+Preset_List11 = 
+Preset_List12 = 
+Preset_List13 = 
+Preset_List14 = 
+Preset_List15 = 
+Preset_List16 = 
+Preset_List17 = 
+Preset_List18 = 
+Preset_List19 = 
+Preset_List20 = 
+Preset_List21 = 
+Preset_List22 = 
+Preset_List23 = 
+Preset_List24 = 
+Preset_List25 = 
+Preset_List26 = 
+Preset_List27 = 
+Preset_List28 = 
+Preset_List29 = 
+Preset_List30 = 
+
+; Preset Max = 256
+; Preset_List1 = Pan_Value(-180 ~ 180)^Tilt_Value(0 ~ 90) ^Zoom_Value(0001 ~ 9999)
+; ex) Preset_List1 = 10.1^80.5 ^1000[Front]
+SS_Front_Pan_Offset = -29.7436
+SS_Front_Tilt_Offset = -0.3032
+
+;20ft
+Preset_List1 = -0.1827^-5.822^180
+Preset_List2 = -1.7^-27.2451^200
+Preset_List3 = -0.0696^-27.4068^250
+Preset_List4 = 0^-42.7068^265
+
+;40ft
+Preset_List5 = -0.0256^-45.0006^1
+Preset_List6 = -0.8051^-62.6^180
+
+;45ft
+Preset_List7 = 0.1401^-48.1^1
+Preset_List10 = -0.247^-65.133^180
+
+
+
+; Gantry stop
+Preset_List8 = 198.9105^-41.3718^1
+
+;Gantry forword
+Preset_List9 = -5.5926^-10.6799^1
+
+
+Preset_List11 = 
+Preset_List12 = 
+Preset_List13 = 
+Preset_List14 = 
+Preset_List15 = 
+Preset_List16 = 
+Preset_List17 = 
+Preset_List18 = 
+Preset_List19 = 
+Preset_List20 = 
+Preset_List21 = 
+Preset_List22 = 
+Preset_List23 = 
+Preset_List24 = 
+Preset_List25 = 
+Preset_List26 = 
+Preset_List27 = 
+Preset_List28 = 
+Preset_List29 = 
+Preset_List30 = 
+
+
+; Preset Max = 256
+; Preset_List1 = Pan_Value(-180 ~ 180)^Tilt_Value(0 ~ 90) ^Zoom_Value(0001 ~ 9999)
+; ex) Preset_List1 = 10.1^80.5 ^1000[Rear]
+SS_Rear_Pan_Offset = -90.2
+SS_Rear_Tilt_Offset = 0.31
+
+;20ft
+Preset_List1 = 4.0^-5.3^150
+Preset_List2 = 3.0^-27.1023^195
+Preset_List3 = 1.2071^-27.4^200
+Preset_List4 = 2.3^-41.9^200
+
+;40ft
+Preset_List5 = 1.0803^-42.9458^1
+Preset_List6 = 1.288^-61.4914^150
+
+;45ft
+Preset_List7 = 0.6^-49.0080^1
+Preset_List10 = 0.6^-66.3^180
+
+; Gantry stop
+Preset_List8 = 165.248^-39.5808^1
+
+;Gantry forword
+Preset_List9 = 5.8926^-14.7423^1
+
+
+
+Preset_List11 = 
+Preset_List12 = 
+Preset_List13 = 
+Preset_List14 = 
+Preset_List15 = 
+Preset_List16 = 
+Preset_List17 = 
+Preset_List18 = 
+Preset_List19 = 
+Preset_List20 = 
+Preset_List21 = 
+Preset_List22 = 
+Preset_List23 = 
+Preset_List24 = 
+Preset_List25 = 
+Preset_List26 = 
+Preset_List27 = 
+Preset_List28 = 
+Preset_List29 = 
+Preset_List30 = 
+
+
+; Preset Max = 256
+; Preset_List1 = Pan_Value(-180 ~ 180)^Tilt_Value(0 ~ 90) ^Zoom_Value(0001 ~ 9999)
+; ex) Preset_List1 = 10.1^80.5 ^1000

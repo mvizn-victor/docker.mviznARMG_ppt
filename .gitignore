@@ -1,0 +1,6 @@
+weights
+largefiles
+.*swp
+pythonloop
+dotpaddleocr
+.ipynb*

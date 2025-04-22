@@ -1,0 +1,3 @@
+cd ~/Code/mviznTLD
+. a
+

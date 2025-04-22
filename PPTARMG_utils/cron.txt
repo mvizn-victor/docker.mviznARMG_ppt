@@ -1,0 +1,17 @@
+#version: id02
+#ic03
+#  init
+#id02
+#  disable killall gnome-shell
+
+* * * * * mkdir -p /opt/captures/cronlog
+
+*/5 * * * * bash /home/mvizn/PPTARMG_config/config/cronrecord.sh 2>&1 > /opt/captures/cronlog/cronrecord
+
+* * * * * python3 /home/mvizn/PPTARMG_utils/pcstats.sh 2>&1 > /opt/captures/cronlog/pcstats
+0 0 * * * python3 /home/mvizn/PPTARMG_utils/crondelete_smart2.py 3e6 2>&1 > /opt/captures/cronlog/crondelete
+* * * * * bash /home/mvizn/PPTARMG_utils/autolaunch.sh 2>&1 > /opt/captures/cronlog/autolaunch
+
+#0 1 * * * killall -3 gnome-shell 2>&1 > /opt/captures/cronlog/killgnomeshell
+
+0 * * * * logrotate -f -s /opt/captures/cronlog/logrotate.status /home/mvizn/TUASARMG_utils/logrotate.conf

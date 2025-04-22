@@ -1,0 +1,10 @@
+rsync on start
+gnome-terminal --title=rsync -- bash /home/mvizn/Code/mviznARMG/rsynconstart.sh 5 9405 2020-05-13
+
+#notes rsynconstart.sh
+#first param time to wait before copying (copy on startup fails if started immediately)
+#second param crane
+#date to start copying
+
+run mvizn va
+gnome-terminal --title=workflow -- bash -c 'cd  /home/mvizn/Code/mviznARMG/ && bash run.sh main'

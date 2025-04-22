@@ -1,0 +1,3 @@
+pan=143
+tilt=8
+zoom=25

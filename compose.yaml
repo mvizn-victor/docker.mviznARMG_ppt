@@ -1,0 +1,74 @@
+services:
+  mvizn_pptarmg:
+    user: "${USER_ID}:${GROUP_ID}"
+    runtime: nvidia        
+    build:
+      context: ./
+      dockerfile: Dockerfile.mvizn_pptarmg
+    container_name: mvizn_pptarmg
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    # Optional: mount a volume if you want to persist logs or enable live development
+    volumes:
+      - /etc/localtime:/etc/localtime:ro    
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro      
+      - /dev/shm:/dev/shm
+      - /opt/captures:/opt/captures
+      - /home/mvizn/PPTARMG_config/config:/app/config
+      #to comment out on production
+      - /home/mvizn/Code/docker.mviznARMG_ppt/mviznARMG/:/app
+    environment:
+      - TZ=Asia/Singapore      
+    #command: ["/bin/bash", "run.sh"]
+    #command: ["/bin/bash","-c","while true;do sleep 1;done"]    
+    command: ["bash","-c","jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --config=/home/hostuser/.jupyter/jupyter_notebook_config.py"]
+
+  mvizn_pptarmg_detectron:
+    user: "${USER_ID}:${GROUP_ID}"
+    container_name: mvizn_pptarmg_detectron
+    build:
+      context: ./
+      dockerfile: Dockerfile.mvizn_pptarmg_detectron
+      args:
+        USER_ID: ${USER_ID:-1000}
+    runtime: nvidia
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro      
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - /dev/shm:/dev/shm
+      - /opt/captures:/opt/captures
+      #to comment out on production
+      - /home/mvizn/Code/docker.mviznARMG_ppt/mviznARMG/:/mviznARMG
+    ports:
+      - "8889:8888"      
+    environment:
+      - DISPLAY=${DISPLAY}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TZ=Asia/Singapore
+    #command: ["/bin/bash","-c","while true;do sleep 1;done"]
+    command: ["/bin/bash","/mviznARMG/docker2/02_start.sh"]
+    #command: ["bash","-c","cd /mviznARMG;jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --config=/home/hostuser/.jupyter/jupyter_notebook_config.py"]
+
+  flaskdisplay:
+    user: "${USER_ID}:${GROUP_ID}"
+    container_name: flaskdisplay
+    build:
+      context: ./
+      dockerfile: Dockerfile.flaskdisplay
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro      
+      - /dev/shm:/dev/shm
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=Asia/Singapore      

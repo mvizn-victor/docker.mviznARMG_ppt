@@ -1,0 +1,9 @@
+*.pb filter=lfs diff=lfs merge=lfs -text
+*.weights filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+EAST/** filter=lfs diff=lfs merge=lfs -text
+Mask_RCNN/** filter=lfs diff=lfs merge=lfs -text
+mrcnn_serving_ready/** filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+**/weights/** filter=lfs diff=lfs merge=lfs -text
+**/sample/** filter=lfs diff=lfs merge=lfs -text

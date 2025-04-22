@@ -1,0 +1,4 @@
+preload network at start for pmnrs hncds hncdsinception textboxdetector
+workflow:reset active bits at job end
+plcclient:hncds_active=hncdstop_active
+updatecam.py

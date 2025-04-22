@@ -1,0 +1,25 @@
+# Use Ubuntu 24.04 as the base image
+FROM ubuntu:24.04
+
+# Disable interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update package lists and install Python3 and pip
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-opencv python3-numpy python3-pandas python3-flask python3-flask-api python3-pyquery python3-shapely && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Flask (add any other Python dependencies if needed)
+# RUN pip3 install --break-system-packages flask pyquery
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy your application code to the container
+COPY flaskdisplay/ /app
+
+# Expose port 5000 so the app can be reached externally
+EXPOSE 5000
+
+CMD ["/bin/sh", "-c", "python3 flaskdisplay.py 5000 > /dev/null 2>&1"]
+

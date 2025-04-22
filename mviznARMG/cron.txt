@@ -1,0 +1,6 @@
+#version:ehz
+#  added run1.sh which runs run.sh in screen if not already ran
+*/5 * * * * bash /home/mvizn/Code/mviznARMG/config/cronrecord_all.sh
+0 0 * * * python3 /home/mvizn/Code/mviznARMG/crondelete.py
+* * * * * python3 /home/mvizn/Code/mviznARMG/updatecam_seohomethod.py
+* * * * * bash /home/mvizn/Code/mviznARMG/run1.sh
