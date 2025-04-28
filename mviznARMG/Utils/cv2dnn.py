@@ -1,6 +1,11 @@
 #version:1
 import cv2
 import numpy as np
+def geti0(i):
+    try:
+        return i[0]
+    except:
+        return i
 class Inception:
     def __init__(self,pbfile,labelsfile=None):
         if labelsfile is None:
@@ -12,7 +17,7 @@ class Inception:
         tmp = self.net.getLayerNames()    
         self.ln=[]
         for i in self.net.getUnconnectedOutLayers():
-            self.ln.append(tmp[i[0]-1]) 
+            self.ln.append(tmp[geti0(i)-1]) 
     def infer(self,frame):
         blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (299, 299),
                 swapRB=True, crop=False)
@@ -45,8 +50,8 @@ class YOLO:
         self.model.setInputParams(size=size, scale=1/255)
     def infer(self, frame, CONFIDENCE_THRESHOLD=0.2, NMS_THRESHOLD=0.4):
         classes, scores, boxes = self.model.detect(frame, CONFIDENCE_THRESHOLD, NMS_THRESHOLD)
-        classes = list(self.classes[i[0]] for i in classes)
-        scores = list(score[0] for score in scores)
+        classes = list(self.classes[geti0(i)] for i in classes)
+        scores = list(geti0(score) for score in scores)
         return classes, scores, boxes
     def inferold(self, frame, thresh=0.2):
         classes, scores, boxes = self.infer(frame, thresh)

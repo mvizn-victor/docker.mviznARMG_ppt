@@ -9,7 +9,7 @@ from Utils.helper import dummyimage,waittillvalidimage
 import glob
 import pickle
 
-if os.path.exists('config/usecv2dnn'):
+if 1:
     from Utils.cv2dnn import YOLO as CV2YOLO
     class YOLOdarknet:
         cv2yolo=None

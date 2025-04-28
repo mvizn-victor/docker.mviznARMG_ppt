@@ -16,7 +16,7 @@ screen -dSm "$app" bash -c "
 echo running $app
 while true; do
     echo running $app
-    stdbuf -oL python3 -u docker2/$app.py
+    stdbuf -oL python3 -u docker2/gpu1pointrend.py
     echo $app
     echo rerun
     date

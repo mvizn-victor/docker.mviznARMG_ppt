@@ -1,7 +1,23 @@
-#version:1
+#version:1.1
+#1.1
+#  substitute YOLO with cv2.dnn
 import cv2
 import time
-from yolohelper import detect as YOLO
+if 1: #id22
+    from Utils.cv2dnn import YOLO as CV2YOLO
+    class YOLOdarknet:
+        cv2yolo=None
+        def inferImg(self,weightPath,thresh,np_image=None,**kwargs):
+            if np_image is None:
+                np_image=np.zeros((3,3,3),dtype=np.uint8)
+            if self.cv2yolo is None:
+                self.cv2yolo=CV2YOLO(weightPath)
+            return self.cv2yolo.inferold(np_image,thresh=thresh)
+    YOLO=YOLOdarknet()
+    YOLO2=YOLOdarknet()
+else:
+    from yolohelper import detect as YOLO
+    from yolohelper import detect2 as YOLO2
 from memcachehelper import memcacheRW as mcrw
 def drawCabinBoxes(frame, results):
     for result in results:

@@ -40,6 +40,7 @@ RUN groupadd -g ${GROUP_ID} hostgroup && \
 # Switch to the new user
 USER hostuser
 ENV HOME=/home/hostuser
+RUN mkdir -p ${HOME}
 
 RUN mkdir -p ${HOME}/.jupyter && \
     echo 'c.NotebookApp.password = "argon2:$argon2id$v=19$m=10240,t=10,p=8$5GhCB4190ff+ssPENRxxjg$G/yOiYB9U79goFRvRmXqNg"' > ${HOME}/.jupyter/jupyter_notebook_config.py && \

@@ -128,12 +128,17 @@ imshow=dict()
 os.system('rm /dev/shm/*_pmnrstop')
 for camname in camnames:
     imshow[camname]=createShm(f'{camname}_pmnrstop')
+print('from textdetect import *')
 from textdetect import *
 #time.sleep(3)
 #preload
+print('from Utils.helper import dummyimage')
 from Utils.helper import dummyimage
-gettextboxes(dummyimage)
-OCR(dummyimage)
+#print('gettextboxes(dummyimage)')
+#gettextboxes(dummyimage)
+#print('OCR(dummyimage)')
+#OCR(dummyimage)
+
 while True:
     #busy looping until gantry in place
     print('busy loop until gantry in place')
@@ -143,6 +148,8 @@ while True:
     if abs(plc.GantryCurrSlot-plc.GantryTargetSlot)<=1:
         break
     time.sleep(0.5)
+print('busy loop until gantry in place')
+print('PMNRS STARTED')
 Tjobstart=datetime.fromtimestamp(mcrw.raw_read('Tjobstart',0))
 JOBDATE=Tjobstart.strftime("%Y-%m-%d")
 JOBTIME=Tjobstart.strftime("%H-%M-%S")

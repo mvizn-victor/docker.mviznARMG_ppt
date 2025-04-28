@@ -1,4 +1,4 @@
-#version:hf14
+#version:id22
 #gd21 1FPS
 #gh22
 #  enablebit = stopprocessing
@@ -36,7 +36,7 @@ import time
 from memcachehelper import memcacheRW as mcrw
 import cv2
 import os
-from yolohelper import detect as YOLO
+
 import SharedArray as sa
 from config.config import *
 from Utils.helper import procimage

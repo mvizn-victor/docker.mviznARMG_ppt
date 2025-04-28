@@ -12,6 +12,7 @@
 #id22
 #always use cv2dnn
 builtins_print=print
+from vcutils.helperfun import *
 import sys
 import os
 try:
@@ -557,8 +558,7 @@ if 1:
                         if x not in negstoredetection[camname]:
                             negstoredetection[camname][x]=[DATE,TIME,frame_cpy,frame,xc,yc]
                 else:
-                    raise Exception('Should never reach here')
-
+                    raise Exception('Should never reach here')            
             assignimage(imshow[camname],frame_cpy)
         lasttcds_statebf=tcds_statebf
         lasttcds_statec=tcds_statec

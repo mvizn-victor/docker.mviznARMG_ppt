@@ -13,17 +13,18 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro    
       - /etc/passwd:/etc/passwd:ro
-      - /etc/group:/etc/group:ro      
+      - /etc/group:/etc/group:ro
       - /dev/shm:/dev/shm
       - /opt/captures:/opt/captures
-      - /home/mvizn/PPTARMG_config/config:/app/config
       #to comment out on production
       - /home/mvizn/Code/docker.mviznARMG_ppt/mviznARMG/:/app
+      - /home/mvizn/PPTARMG_config/config:/app/config
     environment:
-      - TZ=Asia/Singapore      
-    #command: ["/bin/bash", "run.sh"]
+      - TZ=Asia/Singapore
+    #in dockerfile workdir = /app
+    command: ["python3","-u","runworkflow.py"]
     #command: ["/bin/bash","-c","while true;do sleep 1;done"]    
-    command: ["bash","-c","jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --config=/home/hostuser/.jupyter/jupyter_notebook_config.py"]
+    #command: ["bash","-c","jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --config=/home/hostuser/.jupyter/jupyter_notebook_config.py"]
 
   mvizn_pptarmg_detectron:
     user: "${USER_ID}:${GROUP_ID}"
@@ -72,3 +73,38 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=Asia/Singapore      
+
+  mvizn_pptarmg_ui:
+    user: "${USER_ID}:${GROUP_ID}"
+    runtime: nvidia        
+    build:
+      context: ./
+      dockerfile: Dockerfile.mvizn_pptarmg_ui
+    container_name: mvizn_pptarmg_ui
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    # Optional: mount a volume if you want to persist logs or enable live development
+    volumes:
+      - /etc/localtime:/etc/localtime:ro    
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /dev/shm:/dev/shm
+      - /tmp/.X11-unix:/tmp/.X11-unix #for eog
+      - /opt/captures:/opt/captures
+      #to comment out on production
+      - /home/mvizn/Code/docker.mviznARMG_ppt/UI/venv:/home/mvizn/GitHub/mviznARMG/UI/venv
+      - /home/mvizn/Code/docker.mviznARMG_ppt/UI/:/home/mvizn/Code/UI
+      - /home/mvizn/Code/docker.mviznARMG_ppt/mviznARMG/:/home/mvizn/Code/mviznARMG
+      - /home/mvizn/PPTARMG_config/config:/home/mvizn/Code/mviznARMG/config
+    #network_mode: host #for xdg-open
+    stdin_open: true #for xdg-open
+    tty: true #for xdg-open
+    environment:
+      - TZ=Asia/Singapore
+      - DISPLAY=${DISPLAY}
+    #in dockerfile workdir = /home/mvizn/Code/UI
+    command: ["/bin/bash","run.sh"]
+    #command: ["/bin/bash","-c","while true;do sleep 1;done"]    
+    #command: ["bash","-c","jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --config=/home/hostuser/.jupyter/jupyter_notebook_config.py"]
+

@@ -22,7 +22,7 @@ import platform
 deploy=platform.node() not in ['mvizn-demobox-2']
 reported=defaultdict(int)
 
-from yolohelper import detect as YOLO
+#from yolohelper import detect as YOLO
 from config.config import *
 from Utils.helper import procimage
 import json

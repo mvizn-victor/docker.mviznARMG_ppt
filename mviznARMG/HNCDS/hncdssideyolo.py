@@ -1,10 +1,26 @@
-#version:1
+#version:id22
+#id22
+#. use cv2dnn
 from collections import defaultdict
 from datetime import datetime, timedelta
 import time
 import cv2
 import os
-from yolohelper import detect as YOLO
+
+if 1: #id22
+    from Utils.cv2dnn import YOLO as CV2YOLO
+    class YOLOdarknet:
+        cv2yolo=None
+        def inferImg(self,weightPath,thresh,np_image=None,**kwargs):
+            if np_image is None:
+                np_image=np.zeros((3,3,3),dtype=np.uint8)
+            if self.cv2yolo is None:
+                self.cv2yolo=CV2YOLO(weightPath)
+            return self.cv2yolo.inferold(np_image,thresh=thresh)
+    YOLO=YOLOdarknet()
+else:
+    from yolohelper import detect as YOLO
+    
 import SharedArray as sa
 from Utils.helper import dummyimage,waittillvalidimage
 import glob

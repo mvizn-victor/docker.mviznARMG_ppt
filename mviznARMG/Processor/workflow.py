@@ -1,41 +1,78 @@
-#version:fj25
+#version:id23
 #ehz:
 #  replace gnome-terminal with screen
 #  disable quitter
+#id23:
+#  simulation2
 import glob
 from config.config import *
 import os
-from datetime import date
+from datetime import date,datetime
 simulation = os.path.exists('/dev/shm/simARMG')
+simulation2 = os.path.exists('/dev/shm/simARMG2')
 while os.system('touch /opt/captures/test')!=0:    
     print('touch /opt/captures/test failed')
     time.sleep(0.5)
 print(datetime.now(),file=open('/tmp/vastarttime.txt','w'))
 lastJA=False
-os.system('screen -dSm restarter bash restarter.sh ')
+#os.system('screen -dSm restarter bash restarter.sh ')
 os.system('rm /dev/shm/*/*.pkl')
 os.system('rm /dev/shm/*/*.jpg')
+
+from string import Template
+template=Template('''
+mkdir -p /opt/captures/screenlogs/$app
+screen -dSm "$app" bash -c "
+while true; do
+    echo running $app
+    export PYTHONPATH=.    
+    stdbuf -oL python3 -u $script
+    echo $app terminated
+    echo rerun
+    date
+    sleep 1
+done 2>&1 | tee -a /opt/captures/screenlogs/$app/log.txt
+"''')
+
 if not simulation:
-    os.system('screen -dSm tfserve bash -c "while true;do bash tfserve.sh;sleep 1;done;bash"')
-    os.system('screen -dSm hncdsinception bash -c "while true;do python HNCDS/hncdsinception.py;sleep 1;done;echo hncdsinception;bash"')
-    os.system('screen -dSm pmnrstextboxdetector bash -c "while true;do python PMNRS/textboxdetector.py;sleep 1;done;echo textboxdetect;bash"')
-    os.system('screen -dSm hncdstopyolo bash -c "while true;do python HNCDS/hncdstopyolo.py;sleep 1;done;echo hncdstopyolo;bash"')
-    os.system('screen -dSm hncdssideyolo bash -c "while true;do python HNCDS/hncdssideyolo.py;sleep 1;done;echo hncdssideyolo;bash"')
-    os.system('screen -dSm psfaux bash -c "while true;do bash psfaux.sh;sleep 1;done;echo psfaux;bash"')
-    os.system('screen -dSm plcclient bash -c "while true;do python Processor/plcclient.py;sleep 1;done;echo plcclient;bash"')
+    #os.system('screen -dSm tfserve bash -c "while true;do bash tfserve.sh;sleep 1;done;bash"')
+    l__app__script=[]
+    l__app__script.append(['hncdsinception','HNCDS/hncdsinception.py'])
+    l__app__script.append(['hncdstopyolo','HNCDS/hncdstopyolo.py'])
+    l__app__script.append(['hncdssideyolo','HNCDS/hncdssideyolo.py'])
+    if not simulation2:
+        l__app__script.append(['plcclient','Processor/plcclient.py'])
+    else:     
+        l__app__script.append(['plcclient','Processor/plcclient_sim.py'])
+
+    for app,script in l__app__script:
+        print(app,script)
+        os.system(template.safe_substitute(app=app,script=script))
+    #os.system('screen -dSm hncdsinception bash -c "while true;do python3 HNCDS/hncdsinception.py;sleep 1;done;echo hncdsinception;bash"')
+    #os.system('screen -dSm pmnrstextboxdetector bash -c "while true;do python3 PMNRS/textboxdetector.py;sleep 1;done;echo textboxdetect;bash"')
+    #os.system('screen -dSm hncdstopyolo bash -c "while true;do python3 HNCDS/hncdstopyolo.py;sleep 1;done;echo hncdstopyolo;bash"')
+    #os.system('screen -dSm hncdssideyolo bash -c "while true;do python3 HNCDS/hncdssideyolo.py;sleep 1;done;echo hncdssideyolo;bash"')
+    #os.system('screen -dSm psfaux bash -c "while true;do bash psfaux.sh;sleep 1;done;echo psfaux;bash"')
+    #os.system('screen -dSm plcclient bash -c "while true;do python3 Processor/plcclient.py;sleep 1;done;echo plcclient;bash"')
 else:
-    os.system('screen -dSm plcclient bash -c "while true;do python Processor/plcclient.py;sleep 1;done;echo plcclient;bash"')
+    os.system(template.safe_substitute(app=app,script=script))
+    #os.system('screen -dSm plcclient bash -c "while true;do python3 Processor/plcclient.py;sleep 1;done;echo plcclient;bash"')
     pass
+
 try:
     viewshm=sys.argv[1]
 except:
     viewshm='_pmnrs'
+
+viewshm='main'
 
 MOUNTINGOFFLOADING=False
 Tjobstart=0
 Tlastlog=0
 while 1:
     if simulation and not os.path.exists('/dev/shm/simARMG'):
+        raise KeyboardInterrupt
+    if simulation2 and not os.path.exists('/dev/shm/simARMG2'):
         raise KeyboardInterrupt
     plc = readplc()
     mcrw.raw_write('JA',plc.JA)
@@ -95,7 +132,11 @@ while 1:
             LOGFILENAME=f'/opt/captures/JOBINFO/{DATE}.txt'
             printandlog(f'{DATE}_{TIME}',plc.JOBTYPE,plc.SIDE,plc.size,plc.pmnumber,file=makedirsopen(LOGFILENAME,'a'),sep=",")
             pmnumber=plc.pmnumber
-            if not simulation:os.system(f'screen -dSm framesharer bash -c "unbuffer python Processor/framesharer.py {plc.SIDE};echo framesharer;bash" &')
+            if not simulation:
+                if not simulation2:
+                    os.system(f'screen -dSm framesharer bash -c "unbuffer python3 Processor/framesharer.py {plc.SIDE};echo framesharer;bash" &')
+                else:
+                    os.system(f'screen -dSm framesharer bash -c "unbuffer python3 Processor/framesharer_sim.py {plc.SIDE};echo framesharer;bash" &')
             os.makedirs('/dev/shm/armglog',exist_ok=True)
             os.makedirs('/dev/shm/armglog.last', exist_ok=True)
             os.system('rm /dev/shm/armglog/*')
@@ -104,23 +145,23 @@ while 1:
             if plc.pmnumber!='':
                 title = 'PMNRStop'
                 teestr = getteestr(title)
-                os.system(f'bash -c "sleep 1;unbuffer python PMNRS/pmnrstop.py {teestr}" &')
+                os.system(f'bash -c "sleep 1;unbuffer python3 PMNRS/pmnrstop.py {teestr}" &')
                 if len(glob.glob('/dev/shm/*_pmnrsside'))>0:
                     os.system('rm /dev/shm/*_pmnrsside')
                 if not plc.ppm:
                     title = 'PMNRSside'
                     teestr = getteestr(title)
-                    os.system(f'bash -c "sleep 1;unbuffer python PMNRS/pmnrsside.py {teestr}" &')
+                    os.system(f'bash -c "sleep 1;unbuffer python3 PMNRS/pmnrsside.py {teestr}" &')
                 title = 'PMNRSptz'
                 teestr = getteestr(title)
-                os.system(f'bash -c "sleep 1;unbuffer python PMNRS/pmnrsptz.py {teestr}" &')
+                os.system(f'bash -c "sleep 1;unbuffer python3 PMNRS/pmnrsptz.py {teestr}" &')
             if 1:                
                 title = 'HNCDStop'
                 teestr = getteestr(title)
-                os.system(f'bash -c "sleep 1;unbuffer python HNCDS/hncdstop.py {teestr}" &')
+                os.system(f'bash -c "sleep 1;unbuffer python3 HNCDS/hncdstop.py {teestr}" &')
                 title = 'HNCDSside'
                 teestr = getteestr(title)
-                os.system(f'bash -c "sleep 1;unbuffer python HNCDS/hncdsside.py {teestr}" &')
+                os.system(f'bash -c "sleep 1;unbuffer python3 HNCDS/hncdsside.py {teestr}" &')
             viewshm2=viewshm
             if plc.JOBTYPE=='OFFLOADING':
                 tcdsclps=''
@@ -136,14 +177,17 @@ while 1:
                 if tcdsclps=='TCDS':
                     title = 'TCDSptz'
                     teestr = getteestr(title)
-                    os.system(f'bash -c "sleep 1;unbuffer python TCDS/tcdsptz.py {teestr}" &')
+                    if simulation2:
+                        os.system(f'bash -c "sleep 1;unbuffer python3 TCDS/tcdsptz_sim.py {teestr}" &')
+                    else:
+                        os.system(f'bash -c "sleep 1;unbuffer python3 TCDS/tcdsptz.py {teestr}" &')
                     title = 'TCDS'
                     teestr = getteestr(title)
-                    os.system(f'bash -c "sleep 1;unbuffer python TCDS/tcds.py {teestr}" &')
+                    os.system(f'bash -c "sleep 1;unbuffer python3 TCDS/tcds.py {teestr}" &')
                     if plc.containerpos in [2,4,6]:
                         title = 'piggyback'
                         teestr = getteestr(title)
-                        os.system(f'bash -c "sleep 1;unbuffer python CLPS/piggyback.py {teestr}" &')
+                        os.system(f'bash -c "sleep 1;unbuffer python3 CLPS/piggyback.py {teestr}" &')
                     if viewshm=='main':
                         if plc.containerpos in [2,4,6]:
                             viewshm2='_piggyback'
@@ -152,27 +196,28 @@ while 1:
                 elif tcdsclps=='CLPS':
                     title = 'CLPS_yolo'
                     teestr = getteestr(title)
-                    os.system(f'bash -c "unbuffer python CLPS/clps_yolo.py {teestr}" &')
+                    os.system(f'bash -c "unbuffer python3 CLPS/clps_yolo.py {teestr}" &')
                     title = 'CLPSmrcnnloop'
                     teestr = getteestr(title)
-                    os.system(f'bash -c "unbuffer python CLPS/clps_maskrcnn_loop.py {teestr}" &')
+                    os.system(f'bash -c "unbuffer python3 CLPS/clps_maskrcnn_loop.py {teestr}" &')
                     title = 'CLPSptz'
                     teestr = getteestr(title)
-                    os.system(f'bash -c "sleep 1;unbuffer python CLPS/clpsptz.py {teestr}" &')
+                    os.system(f'bash -c "sleep 1;unbuffer python3 CLPS/clpsptz.py {teestr}" &')
                     title = 'CLPS'
                     teestr = getteestr(title)
-                    os.system(f'bash -c "sleep 1;unbuffer python CLPS/clps.py {teestr}" &')
+                    os.system(f'bash -c "sleep 1;unbuffer python3 CLPS/clps.py {teestr}" &')
                     if viewshm=='main':
                         viewshm2='_clps'
             else:
                 if viewshm=='main':
                     viewshm2='_pmnrs'                
-            os.system(f'screen -dSm viewshm bash -c "sleep 5;unbuffer python viewshm2.py 1920 1080 100 50 {viewshm2}"')
+            #os.system(f'screen -dSm viewshm bash -c "sleep 5;unbuffer python3 viewshm2.py 1920 1080 100 50 {viewshm2}"')
+            os.system(f'screen -dSm viewshm bash -c "sleep 5;unbuffer python3 viewshm3.py 1920 1080 100 50 {viewshm2};bash"')
             MOUNTINGOFFLOADING=True
         else:
             #shuffle job started
             #launch camchecker.py
-            os.system('screen -dSm camchecker bash -c "python camdiagnostics/camchecker.py;echo camchecker;bash"')
+            os.system('screen -dSm camchecker bash -c "python3 camdiagnostics/camchecker.py;echo camchecker;bash"')
             MOUNTINGOFFLOADING=False
     elif plc.JA and MOUNTINGOFFLOADING:            
         if T1posaway==0 and abs(plc.GantryTargetSlot-plc.GantryCurrSlot)<=1:
@@ -211,6 +256,7 @@ while 1:
         mcrw.raw_write('hncdstop_active',0)
         mcrw.raw_write('hncdsside_active',0)
         os.system('bash endjob.sh > /dev/null 2>&1') 
+        os.system('touch /dev/shm/fs.log') 
         os.system('mv /dev/shm/fs.log /dev/shm/armglog/') 
         try:
             #save logs to lastlogs

@@ -27,9 +27,15 @@
   while true; do
       export DISPLAY=":$s"
       echo "Trying DISPLAY=$DISPLAY"
-      killall firefox
+      xdotool search --onlyvisible --class firefox windowactivate
+ 
+      # Close tabs one by one
+      for i in {1..20}; do  # adjust 20 to a larger number if you want
+          xdotool key ctrl+w
+          sleep 0.1  # small delay to avoid overwhelming
+      done
       # Try launching Firefox in the background and suppressing output errors
-      firefox localhost:5000/TCDS localhost:5000/PMNRS localhost:5000/CLPS localhost:5000/HNCDS localhost:5000/main &>/dev/null &
+      firefox http://localhost:5000/main https://localhost:8000 &>/dev/null &
       pid=$!
 
       # Wait a few seconds to check if Firefox is running successfully
