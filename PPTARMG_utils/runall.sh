@@ -1,5 +1,6 @@
   export USER_ID=$(id -u)
   export GROUP_ID=$(id -g)
+  export DISPLAY=$(cat ~/DISPLAY)
   cd /home/mvizn/Code/docker.mviznARMG_ppt
   bash ~/PPTARMG_utils/killall.sh
 
@@ -23,31 +24,23 @@
   fi
   echo sleep 3
   sleep 3
-  echo try firefox with DISPLAY=:0 and keep incrementing until success
-  s=0  # Start with DISPLAY=:0
-  while true; do
-      export DISPLAY=":$s"
-      echo "Trying DISPLAY=$DISPLAY"
-      xdotool search --onlyvisible --class firefox windowactivate
- 
-      # Close tabs one by one
-      for i in {1..20}; do  # adjust 20 to a larger number if you want
-          xdotool key ctrl+w
-          sleep 0.1  # small delay to avoid overwhelming
-      done
-      # Try launching Firefox in the background and suppressing output errors
-      firefox http://localhost:5000/main https://localhost:8000 &>/dev/null &
-      pid=$!
-
-      # Wait a few seconds to check if Firefox is running successfully
-      sleep 3
-
-      # Check if the process is still running
-      if ps -p $pid > /dev/null; then
-          echo "Firefox started successfully on DISPLAY=$DISPLAY"
-          break
-      else
-          echo "Firefox failed on DISPLAY=$DISPLAY, trying next..."
-          s=$((s + 1))
-      fi
+  echo "Closing existing firefox"
+  xdotool search --onlyvisible --class firefox windowactivate
+  # Close tabs one by one
+  for i in {1..10}; do  # adjust 20 to a larger number if you want
+      xdotool key ctrl+w
+      sleep 0.1  # small delay to avoid overwhelming
   done
+  xdotool search --onlyvisible --class firefox windowactivate
+  # Close tabs one by one
+  for i in {1..10}; do  # adjust 20 to a larger number if you want
+      xdotool key ctrl+w
+      sleep 0.1  # small delay to avoid overwhelming
+  done
+  killall firefox
+
+  echo "Launching firefox"
+  # Try launching Firefox in the background and suppressing output errors
+  firefox http://localhost:5000/main https://localhost:8000 &>/dev/null &
+  xdotool windowmove "$window_id" 0 0
+  xdotool windowsize "$window_id" 50% 100%  

@@ -18,8 +18,13 @@ import cv2
 import pickle
 import os
 import glob
+import GPUtil
 
-os.environ['CUDA_VISIBLE_DEVICES']='1'    
+if len(GPUtil.getGPUs())==2:
+    os.environ['CUDA_VISIBLE_DEVICES']='1'
+else:
+    os.environ['CUDA_VISIBLE_DEVICES']='0'
+
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH']='true'
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg

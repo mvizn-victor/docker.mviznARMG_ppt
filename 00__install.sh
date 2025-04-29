@@ -1,5 +1,7 @@
 cd ~/Code/docker.mviznARMG_ppt
-echo do apt install, enter vapc password:
+echo $DISPLAY > ~/DISPLAY
+echo First check that raid is mounted already?
+echo Now doing apt install, enter vapc password:
 bash aptinstall.sh
 bash 01_*.sh
 if [ ! -e ~/PPTARMG_config ]; then

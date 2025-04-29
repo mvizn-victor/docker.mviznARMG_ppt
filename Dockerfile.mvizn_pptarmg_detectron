@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install "numpy==1.26.4" 
 RUN pip3 install --no-cache-dir jupyterlab
-
+RUN pip3 install GPUtil
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
