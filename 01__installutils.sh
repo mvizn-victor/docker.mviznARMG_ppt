@@ -1,2 +1,3 @@
 #01__installutils.sh
-rsync -av PPTARMG_utils/ ~/PPTARMG_utils/
+rm -rf ~/PPTARMG_utils
+ln -sf /home/mvizn/Code/docker.mviznARMG_ppt/PPTARMG_utils ~

@@ -7,6 +7,7 @@
   if [ "$1" = "pull" ];then
     #docker pull gaseooo/detectron2:1.0.1
     docker pull ubuntu:24.04  # for flaskdisplay
+    docker pull python:3.8-slim # for UI
     docker pull pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime  # for detectron
     #docker pull nvidia/cuda:11.1.1-cudnn8-devel-ubuntu18.04
     docker pull ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04
