@@ -1,5 +1,5 @@
 cd ~/Code/docker.mviznARMG_ppt
-echo '>>>> do apt install, enter vapc password:'
+echo do apt install, enter vapc password:
 bash aptinstall.sh
 bash 01_*.sh
 if [ ! -e ~/PPTARMG_config ]; then
