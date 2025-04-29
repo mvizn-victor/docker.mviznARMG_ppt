@@ -42,5 +42,8 @@
   echo "Launching firefox"
   # Try launching Firefox in the background and suppressing output errors
   firefox http://localhost:5000/main https://localhost:8000 &>/dev/null &
+  while ! window_id=$(xdotool search --onlyvisible --class "Firefox" 2>/dev/null); do
+    sleep 0.5
+  done
   xdotool windowmove "$window_id" 0 0
   xdotool windowsize "$window_id" 50% 100%  

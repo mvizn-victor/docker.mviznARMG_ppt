@@ -19,7 +19,7 @@ RUN pip3 install numpy==1.21.5 --only-binary=:all:
 RUN pip3 install paddlepaddle -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
 
 RUN apt-get update && apt-get install -y \
-    python3-pip python3-dev python3-venv \
+    rsync python3-pip python3-dev python3-venv \
     build-essential \
     curl \
     && rm -rf /var/lib/apt/lists/*
