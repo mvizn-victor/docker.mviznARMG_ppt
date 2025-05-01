@@ -47,9 +47,13 @@ while True:
         for (camname,shm) in shms:
             im1=sa.attach(f'shm://{camname}')
             imlabel=np.zeros((50,im1.shape[1],3),np.uint8)
-            putText(imlabel,"\n"+camname,(0,0),font_scale=1.5,thickness=4)
+            putText(imlabel,"\n"+camname,(0,0),color=(255,255,255),font_scale=1.5,thickness=4)
             l__shm.append(vstack([im1,imlabel]))
-        im=resizefit(gencollage(l__shm,cols=math.ceil(len(shms)**.5)))
+
+        im1=resizefit(gencollage(l__shm,cols=math.ceil(len(shms)**.5)))
+        imlabel=np.zeros((50,im1.shape[1],3),np.uint8)
+        putText(imlabel,"\n"+groupname,(0,0),color=(255,255,255),font_scale=1.5,thickness=4)
+        im=vstack([im1,imlabel])
         k=fd.imswk(im,1)
         if k==ord('m'):
             groupname='main'
