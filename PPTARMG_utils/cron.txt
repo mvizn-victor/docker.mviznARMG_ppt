@@ -14,4 +14,4 @@
 
 #0 1 * * * killall -3 gnome-shell 2>&1 > /opt/captures/cronlog/killgnomeshell
 
-0 * * * * logrotate -f -s /opt/captures/cronlog/logrotate.status /home/mvizn/TUASARMG_utils/logrotate.conf
+0 * * * * logrotate -f -s /opt/captures/cronlog/logrotate.status /home/mvizn/PPTARMG_utils/logrotate.conf

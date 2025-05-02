@@ -1,4 +1,4 @@
-filename="/tmp/launched"
+filename="/dev/shm/launched"
 if [ -e "$filename" ]; then
   echo "File $filename exists."
 else

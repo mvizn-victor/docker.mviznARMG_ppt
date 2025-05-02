@@ -21,6 +21,7 @@ services:
       - /home/mvizn/PPTARMG_config/config:/app/config
     environment:
       - TZ=Asia/Singapore
+    init: true      
     #in dockerfile workdir = /app
     command: ["python3","-u","runworkflow.py"]
     #command: ["/bin/bash","-c","while true;do sleep 1;done"]    
@@ -53,6 +54,7 @@ services:
       - DISPLAY=${DISPLAY}
       - NVIDIA_VISIBLE_DEVICES=all
       - TZ=Asia/Singapore
+    init: true            
     #command: ["/bin/bash","-c","while true;do sleep 1;done"]
     command: ["/bin/bash","/mviznARMG/docker2/02_start.sh"]
     #command: ["bash","-c","cd /mviznARMG;jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --config=/home/hostuser/.jupyter/jupyter_notebook_config.py"]
@@ -73,6 +75,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=Asia/Singapore      
+    init: true      
 
   mvizn_pptarmg_ui:
     user: "${USER_ID}:${GROUP_ID}"
@@ -98,6 +101,7 @@ services:
       - /home/mvizn/Code/docker.mviznARMG_ppt/mviznARMG/:/home/mvizn/Code/mviznARMG
       - /home/mvizn/PPTARMG_config/config:/home/mvizn/Code/mviznARMG/config
     #network_mode: host #for xdg-open
+    init: true          
     stdin_open: true #for xdg-open
     tty: true #for xdg-open
     environment:

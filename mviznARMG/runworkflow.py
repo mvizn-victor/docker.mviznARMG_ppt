@@ -1,5 +1,8 @@
 import time
 import os
+from datetime import datetime
+print(datetime.now(),'app launched',file=open('/opt/captures/launchlog.txt','a'))
+
 app='workflow'
 script='Processor/workflow.py'
 from string import Template
@@ -18,5 +21,12 @@ done 2>&1 | tee -a /opt/captures/screenlogs/$app/log.txt
 "''')
 os.system(template.safe_substitute(app=app,script=script))
 while 1:
+    if os.path.exists('/dev/shm/launched'):
+        try:
+            import GPUtil
+            GPUtil.getGPUs()
+        except:
+            print(datetime.now(),'GPU.getGPUs() failed, removing /dev/shm/launched to relaunch',file=open('/opt/captures/launchlog.txt','a'))
+            os.unlink('/dev/shm/launched')
     os.system('screen -ls')
     time.sleep(1)
