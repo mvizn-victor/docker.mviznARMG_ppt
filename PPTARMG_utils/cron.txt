@@ -1,17 +1,24 @@
-#version: ie02
+#version: ie06
 #ic03
 #  init
 #id02
 #  disable killall gnome-shell
 #ie02
 #  new crondelete_smart2 specify target 25% free disk space
+#ie06
+#  cronrecord_all.sh
+#  updatecam_seohomethod.py
+#ie07
+#  crondelete_smart2.py 35p
 
 * * * * * mkdir -p /opt/captures/cronlog
 
-*/5 * * * * bash /home/mvizn/PPTARMG_config/config/cronrecord.sh 2>&1 > /opt/captures/cronlog/cronrecord
+*/5 * * * * bash /home/mvizn/PPTARMG_config/cronrecord_all.sh 2>&1 > /opt/captures/cronlog/cronrecord
 
-* * * * * python3 /home/mvizn/PPTARMG_utils/pcstats.sh 2>&1 > /opt/captures/cronlog/pcstats
-0 0 * * * python3 /home/mvizn/PPTARMG_utils/crondelete_smart2.py 25p 2>&1 > /opt/captures/cronlog/crondelete
+* * * * * python3 /home/mvizn/PPTARMG_utils/updatecam_seohomethod.py > /opt/captures/cronlog/update_seohomethod
+
+* * * * * bash /home/mvizn/PPTARMG_utils/pcstats.sh 2>&1 > /opt/captures/cronlog/pcstats
+0 0 * * * python3 /home/mvizn/PPTARMG_utils/crondelete_smart2.py 35p 2>&1 > /opt/captures/cronlog/crondelete
 * * * * * bash /home/mvizn/PPTARMG_utils/autolaunch.sh 2>&1 > /opt/captures/cronlog/autolaunch
 
 #0 1 * * * killall -3 gnome-shell 2>&1 > /opt/captures/cronlog/killgnomeshell
