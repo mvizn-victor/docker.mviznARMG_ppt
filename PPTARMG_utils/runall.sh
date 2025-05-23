@@ -1,8 +1,16 @@
+#ie15
+# rm /dev/shm/VCMC/* and /dev/shm/cam*
+# mkdir -p /opt/captures using user to prevent created with root permission
+
   export USER_ID=$(id -u)
   export GROUP_ID=$(id -g)
   export DISPLAY=$(cat ~/DISPLAY)
   cd /home/mvizn/Code/docker.mviznARMG_ppt
   bash ~/PPTARMG_utils/killall.sh
+
+  rm /dev/shm/VCMC/*
+  rm /dev/shm/cam*
+  mkdir -p /opt/captures
 
   echo docker compose up
   if [ "$1" = "pull" ];then
