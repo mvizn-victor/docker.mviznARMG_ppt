@@ -18,6 +18,7 @@
     docker pull ubuntu:24.04  # for flaskdisplay
     docker pull python:3.8-slim # for UI
     docker pull pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime  # for detectron
+    docker pull pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
     #docker pull nvidia/cuda:11.1.1-cudnn8-devel-ubuntu18.04
     docker pull ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04
     docker pull ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04-noAVX2

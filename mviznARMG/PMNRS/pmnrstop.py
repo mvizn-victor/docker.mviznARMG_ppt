@@ -1,4 +1,4 @@
-#version:id22
+#version:if13
 ##gi01
 #processing disable bit
 #processing 0 when waiting
@@ -6,7 +6,8 @@
 #  snapshot 0s and 5s after job
 ##id22
 #  new paddleocr results[0] instead of result
-
+##if13
+#  fix ocr_and_draw that is backward compatible with old paddleocr
 def print(*x,**kw):
     from datetime import datetime
     if 'file' not in kw:
@@ -35,17 +36,43 @@ try:
         return PIL.Image.fromarray(x[:,:,::-1])
     def PILtonp(x):
         return np.array(x)[:,:,::-1]
+    #if13
     def ocr_and_draw(im_np):
-        result=ocr.ocr(im_np)
-        if 0: #OLDER VERSION
-            boxes = [line[0] for line in result]
-            txts = [line[1][0] for line in result]
-            scores = [line[1][1] for line in result]
-        boxes = [line[0] for line in result[0]]
-        txts = [line[1][0] for line in result[0]]
-        scores = [line[1][1] for line in result[0]]        
-        im_annot = draw_ocr(im_np, boxes, txts, scores, font_path='fonts/simfang.ttf')
-        return txts,im_annot
+        result = ocr.ocr(im_np)
+
+        # Handle None or empty results safely
+        if result is None or len(result) == 0 or result[0] is None:
+            return [], im_np
+
+        # Handle older version format
+        if isinstance(result[0], tuple) and len(result[0]) == 2:
+            # result is a flat list: [(box, (text, score)), ...]
+            try:
+                boxes = [line[0] for line in result]
+                txts = [line[1][0] for line in result]
+                scores = [line[1][1] for line in result]
+            except Exception as e:
+                print(f"OCR parsing error (old format): {e}")
+                return [], im_np
+        else:
+            # result is nested: [[(box, (text, score)), ...]]
+            try:
+                lines = result[0]
+                boxes = [line[0] for line in lines]
+                txts = [line[1][0] for line in lines]
+                scores = [line[1][1] for line in lines]
+            except Exception as e:
+                print(f"OCR parsing error (new format): {e}")
+                return [], im_np
+
+        try:
+            im_annot = draw_ocr(im_np, boxes, txts, scores, font_path='fonts/simfang.ttf')
+        except Exception as e:
+            print(f"Draw OCR error: {e}")
+            im_annot = im_np
+
+        return txts, im_annot
+
     if not os.path.exists('fonts/simfang.ttf'):
         raise
     usepaddleocr=True

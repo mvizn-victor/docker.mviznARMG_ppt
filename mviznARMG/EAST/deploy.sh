@@ -1,5 +1,3 @@
-#!/bin/bash
-mkdir -p server_log
-gunicorn -w 3 run_demo_server:app -b 0.0.0.0:8769 -t 120 \
-	--error-logfile server_log/error.log \
-	--access-logfile server_log/access.log
+version https://git-lfs.github.com/spec/v1
+oid sha256:83af01daf0b751dd8d7c8ee1bea6735050285689bf52305bcd377609c554d389
+size 171
