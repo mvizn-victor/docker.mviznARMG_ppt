@@ -4,7 +4,7 @@ services:
     runtime: nvidia        
     build:
       context: ./
-      dockerfile: Dockerfile.mvizn_pptarmg
+      dockerfile: Dockerfile.mvizn_pptarmg    
     container_name: mvizn_pptarmg
     restart: unless-stopped
     ports:

@@ -42,9 +42,9 @@ def read_seoho_preset_folder(folder):
     return pan,tilt
 
 
-os.makedirs('PPTARMG_config/tcds',exist_ok=True)
-os.makedirs('PPTARMG_config/clps',exist_ok=True)
-os.makedirs('PPTARMG_config/pmnrs',exist_ok=True)
+os.makedirs('PPTARMG_config/config/tcds',exist_ok=True)
+os.makedirs('PPTARMG_config/config/clps',exist_ok=True)
+os.makedirs('PPTARMG_config/config/pmnrs',exist_ok=True)
 def getcamname(f):
     for camname in ['cnlsbf','cnlsbb','cnlsbc','cnssbf','cnssbb','cnssbc','ovls','ovss']:
         if camname in f:
@@ -59,20 +59,20 @@ def getptz(f):
 
 newcat=os.popen(f'cat {preset_folder}/*').read()
 try:
-    oldcat=open('PPTARMG_config/seoho_offsets/lastcat.txt').read()
+    oldcat=open('PPTARMG_config/config/seoho_offsets/lastcat.txt').read()
 except:
     oldcat=''
 from datetime import datetime
 if newcat==oldcat:
-    print(datetime.now(),'not updating',file=open('PPTARMG_config/seoho_offsets/log.txt','a'))
+    print(datetime.now(),'not updating',file=open('PPTARMG_config/config/seoho_offsets/log.txt','a'))
     quit()
 else:
     from datetime import datetime
-    print(datetime.now(),'updating',file=open('PPTARMG_config/seoho_offsets/log.txt','a'))
-    open('PPTARMG_config/seoho_offsets/lastcat.txt','w').write(newcat)
+    print(datetime.now(),'updating',file=open('PPTARMG_config/config/seoho_offsets/log.txt','a'))
+    open('PPTARMG_config/config/seoho_offsets/lastcat.txt','w').write(newcat)
 try:
     pan,tilt=read_seoho_preset_folder(preset_folder)
-    for f in glob.glob('PPTARMG_config/seoho_offsets/pmnrs/*.txt')+glob.glob('PPTARMG_config/seoho_offsets/clps/*.txt')+glob.glob('PPTARMG_config/seoho_offsets/tcds/*.txt'):
+    for f in glob.glob('PPTARMG_config/config/seoho_offsets/pmnrs/*.txt')+glob.glob('PPTARMG_config/config/seoho_offsets/clps/*.txt')+glob.glob('PPTARMG_config/config/seoho_offsets/tcds/*.txt'):
         camname=getcamname(f)
         p,t,z=getptz(f)
         p='%.2f'%(p+pan[camname])
@@ -80,11 +80,11 @@ try:
         z=z
         ptz=f'pan={p}\ntilt={t}\nzoom={z}'
         print(f,camname)
-        fout=f.replace('PPTARMG_config/seoho_offsets/','PPTARMG_config/')
+        fout=f.replace('PPTARMG_config/config/seoho_offsets/','PPTARMG_config/config/')
         assert 'seoho' not in fout
         print(fout)
         print(ptz)
         print(ptz,file=open(fout,'w'))
 except Exception as e:
-    print(datetime.now(),'fail',e,file=open('PPTARMG_config/seoho_offsets/log.txt','a'))
+    print(datetime.now(),'fail',e,file=open('PPTARMG_config/config/seoho_offsets/log.txt','a'))
     quit()

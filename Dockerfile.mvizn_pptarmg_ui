@@ -1,32 +1,7 @@
 # Use Ubuntu 24.04 as the base image
-FROM python:3.8-slim
+FROM ghcr.io/mvizn/mvizn-docker-images:dockermviznarmg_ppt-mvizn_pptarmg_ui_2025-09-05
 
-# Disable interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Update package lists and install required packages
-
- RUN apt-get update && \
-     apt-get install -y \
-         libgl1-mesa-glx \
-         libglib2.0-0 
- RUN apt-get install -y procps ffmpeg
- RUN apt-get install -y gunicorn 
- RUN apt-get install -y eog nautilus
-
- ARG USER_ID=1000
- ARG GROUP_ID=1000
- 
-# Create matching user and group
- RUN groupadd -g ${GROUP_ID} mvizn && \
-    useradd -m -u ${USER_ID} -g ${GROUP_ID} mvizn
-
-# Switch to the new user
- USER mvizn
- ENV HOME=/home/mvizn
- RUN mkdir -p ${HOME}
-
- WORKDIR /home/mvizn/Code/UI
+WORKDIR /home/mvizn/Code/UI
 
 # Expose port
 EXPOSE 8000

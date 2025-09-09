@@ -1,51 +1,6 @@
 #FROM ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04
-FROM ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04-noAVX2
+FROM ghcr.io/mvizn/mvizn-docker-images:dockermviznarmg_ppt-mvizn_pptarmg_2025-09-05
 
-# Disable interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Update package lists and install Python3 and pip
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip python3-pandas  python3-pyquery python3-shapely screen && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && \
-    apt-get install -y logrotate expect python3-pylibmc memcached psmisc && \
-    rm -rf /var/lib/apt/lists/* 
-
-RUN pip3 install SharedArray psutil requests GPUtil websocket-client
-RUN pip3 install paddleocr==2.10.0 albumentations
-RUN pip3 install numpy==1.21.5 --only-binary=:all:
-#RUN pip3 install paddlepaddle -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
-RUN pip3 install paddlepaddle==3.0.0
-
-RUN apt-get update && apt-get install -y \
-    rsync python3-pip python3-dev python3-venv \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install --no-cache-dir jupyterlab
-RUN pip3 install --no-cache-dir pillow
-
-ARG USER_ID=1000
-ARG GROUP_ID=1000
-
-# Create matching user and group
-RUN groupadd -g ${GROUP_ID} hostgroup && \
-    useradd -m -u ${USER_ID} -g ${GROUP_ID} hostuser
-
-# Switch to the new user
-USER hostuser
-ENV HOME=/home/hostuser
-RUN mkdir -p ${HOME}
-
-RUN mkdir -p ${HOME}/.jupyter && \
-    echo 'c.NotebookApp.password = "argon2:$argon2id$v=19$m=10240,t=10,p=8$5GhCB4190ff+ssPENRxxjg$G/yOiYB9U79goFRvRmXqNg"' > ${HOME}/.jupyter/jupyter_notebook_config.py && \
-    echo "c.NotebookApp.token = ''" >> ${HOME}/.jupyter/jupyter_notebook_config.py && \
-    echo "c.NotebookApp.ip = '0.0.0.0'" >> ${HOME}/.jupyter/jupyter_notebook_config.py && \
-    echo "c.NotebookApp.open_browser = False" >> ${HOME}/.jupyter/jupyter_notebook_config.py && \
-    echo "c.NotebookApp.port = 8888" >> ${HOME}/.jupyter/jupyter_notebook_config.py
 EXPOSE 8888
 
 COPY mviznARMG/dotpaddleocr $HOME/.paddleocr

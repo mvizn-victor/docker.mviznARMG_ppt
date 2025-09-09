@@ -1,0 +1,52 @@
+# --- Base: PyTorch with CUDA 12.8 (Blackwell-ready) ---
+#FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-devel
+FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
+
+ENV DEBIAN_FRONTEND=noninteractive
+# NVIDIA repo setup (Ubuntu 22.04 example)
+RUN apt-get update && apt-get install -y curl gnupg && \
+    curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub | \
+      gpg --dearmor -o /usr/share/keyrings/cuda-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" \
+      > /etc/apt/sources.list.d/cuda.list && \
+    apt-get update && apt-get install -y \
+      cuda-toolkit-12-8 build-essential ninja-build cmake && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y \
+    git ffmpeg libsm6 libxext6 build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV CUDA_HOME=/usr/local/cuda
+ENV PATH=$CUDA_HOME/bin:$PATH
+ENV LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+ENV TORCH_CUDA_ARCH_LIST="12.0" FORCE_CUDA=1
+
+RUN pip install --upgrade pip && \
+    pip install cython opencv-python pycocotools matplotlib iopath fvcore && \
+    python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
+
+# Extras you had
+RUN apt-get update && apt-get install -y screen expect tcl libtcl8.6 && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install "numpy==1.26.4" 
+RUN pip3 install --no-cache-dir jupyterlab
+RUN pip3 install GPUtil
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN groupadd -g ${GROUP_ID} hostgroup || true && \
+    useradd -m -u ${USER_ID} -g ${GROUP_ID} hostuser
+USER hostuser
+ENV HOME=/home/hostuser
+RUN mkdir -p ${HOME} \
+ && mkdir -p ${HOME}/.jupyter \
+ && echo 'c.NotebookApp.password = "argon2:$argon2id$v=19$m=10240,t=10,p=8$5GhCB4190ff+ssPENRxxjg$G/yOiYB9U79goFRvRmXqNg"' > ${HOME}/.jupyter/jupyter_notebook_config.py \
+ && echo "c.NotebookApp.token = ''" >> ${HOME}/.jupyter/jupyter_notebook_config.py \
+ && echo "c.NotebookApp.ip = '0.0.0.0'" >> ${HOME}/.jupyter/jupyter_notebook_config.py \
+ && echo "c.NotebookApp.open_browser = False" >> ${HOME}/.jupyter/jupyter_notebook_config.py \
+ && echo "c.NotebookApp.port = 8888" >> ${HOME}/.jupyter/jupyter_notebook_config.py
+
+WORKDIR $HOME
+EXPOSE 8888

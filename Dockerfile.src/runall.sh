@@ -15,19 +15,13 @@
   echo docker compose up
   if [ "$1" = "pull" ];then
     #docker pull gaseooo/detectron2:1.0.1
-    if false; then
-      docker pull ubuntu:24.04  # for flaskdisplay
-      docker pull python:3.8-slim # for UI
-      docker pull pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime  # for detectron
-      docker pull pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
-      #docker pull nvidia/cuda:11.1.1-cudnn8-devel-ubuntu18.04
-      docker pull ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04
-      docker pull ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04-noAVX2
-    fi
-    docker pull ghcr.io/mvizn/mvizn-docker-images:dockermviznarmg_ppt-mvizn_pptarmg_ui_2025-09-05
-    docker pull ghcr.io/mvizn/mvizn-docker-images:dockermviznarmg_ppt-mvizn_pptarmg_2025-09-05
-    docker pull ghcr.io/mvizn/mvizn-docker-images:dockermviznarmg_ppt-mvizn_pptarmg_detectron_2025-09-05
-    docker pull ghcr.io/mvizn/mvizn-docker-images:dockermviznarmg_ppt-flaskdisplay_2025-09-05
+    docker pull ubuntu:24.04  # for flaskdisplay
+    docker pull python:3.8-slim # for UI
+    docker pull pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime  # for detectron
+    docker pull pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
+    #docker pull nvidia/cuda:11.1.1-cudnn8-devel-ubuntu18.04
+    docker pull ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04
+    docker pull ghcr.io/mvizn/mvizn-docker-images:4.11.0_cuda12.4.1-cudnn-devel-ubuntu22.04-noAVX2
     exit
   elif [ "$1" = "build" ];then
     docker compose up --build --remove-orphans
