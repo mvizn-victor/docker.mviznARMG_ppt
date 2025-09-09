@@ -258,6 +258,7 @@ JOBTIME=Tjobstart.strftime("%H-%M-%S")
 PHOTOLOGDIRNAME=f'/opt/captures/TCDS/photologs/{JOBDATE}/{JOBTIME}'
 PHOTOLOGRAWDIRNAME=f'/opt/captures/TCDS/photologs_raw/{JOBDATE}/{JOBTIME}'
 LOGFILENAME=f'/opt/captures/TCDS/logs/{JOBDATE}.txt'
+BLOGFILENAME=f'/opt/captures/TCDS/blogs/{JOBDATE}.txt'
 PAN_WAIT=0
 
 lasttcds_statebf=0
