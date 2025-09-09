@@ -1,8 +1,20 @@
-#version:id24
+#version:ig01
 #fk14-atpostxt return False if fail
 #gd21-atpostxt wrap
 #gh16-plc.data
 #id24: try import print fail
+#ic24-atpostxt tolerance change from 0.1 to 1
+#ig01-speed_fromplc
+#ig01-log response of ptz
+
+from io import StringIO
+import traceback
+def geterrorstring(e):
+    sio=StringIO()
+    print("An exception occurred:", e, file=sio)
+    print("\nStack trace:",file=sio)
+    print(traceback.format_exc(),file=sio)
+    return sio.getvalue()
 
 import sys
 import os
@@ -184,7 +196,6 @@ class PLC:
             if type(val)==bool:val=val*1
             print(f'{attr}:{val}',end=" ")
         print()
-        
 class PLC2:
     # Class variables to track previous state for speed calculation
     lastHoistPos = 0
@@ -333,7 +344,8 @@ class PLC2:
                 self.CLPS_OpsAck = (source[79] & b[3]) > 0
 
                 self.heartbeat_echo = struct.unpack('>B', source[80:81])[0]
-
+		#ig01
+                self.speed_fromplc = struct.unpack('>h', source[84:86])[0]
             else:
                  # If bytes are too short, attributes remain at default values.
                  print(f"Warning: PLC2 input bytes too short ({len(source)} bytes). Expected at least 81. Attributes will retain default values.")
@@ -620,13 +632,21 @@ class AxisCamera:
         open(fname, 'w').write(json.dumps(self.position()))
 
     def loadposthread(self, pos):
+        #ig01
         if simulation:
             return True
         for i in range(3):
             try:
+                NOW=datetime.now()
+                YMD=NOW.strftime('%Y-%m-%d')
+                os.makedirs(f'/opt/captures/ptzlog',exist_ok=True)
+                logname=f'/opt/captures/ptzlog/{YMD}.txt'
+                print(NOW,'ptzlog',self.ip,i,'setpos',pos,file=open(logname,'a'))
                 self.setposition(pos)
+                print(NOW,'ptzlog',self.ip,i,'success',file=open(logname,'a'))
                 break
-            except:                
+            except Exception as e:
+                print(NOW,'ptzlog',self.ip,i,geterrorstring(e),'set position error redo',file=open(logname,'a'))
                 print('set position', 'error redo')
                 time.sleep(0.05)
 
@@ -668,7 +688,7 @@ class AxisCamera:
         try:
             postarget=self.position()
             #gd21
-            return min((postarget['pan']-pos['pan'])%360,(pos['pan']-postarget['pan'])%360)<=0.1 and abs(postarget['tilt']-pos['tilt'])<=0.1 and abs(postarget['zoom']-pos['zoom'])<=0.1
+            return min((postarget['pan']-pos['pan'])%360,(pos['pan']-postarget['pan'])%360)<=1 and abs(postarget['tilt']-pos['tilt'])<=1 and abs(postarget['zoom']-pos['zoom'])<=1
         except:
             return False
     def loadposstr(self, s):

@@ -1,4 +1,9 @@
-#version:fj18
+#version:id28
+#fj18
+#  previous
+#id28
+#  change plcout packet size to 110
+
 import psutil
 import GPUtil
 from config.config import *
@@ -205,6 +210,13 @@ while True:
     BYTES[45]=0
     for i,camtype in enumerate(['cf','cb','cc','tf','tb']):
         BYTES[45]|=(mcrw.raw_read(f'tcds_{camtype}',0)-mcrw.raw_read(f'Tjobstart',0)>0)*b[i]
+
+    #id28
+    for i,camtype in enumerate(['cf','cb','cc','tf','tb']):
+        BYTEADDR=100+i*2
+        BYTES[BYTEADDR:BYTEADDR+2]=struct.pack('>h',mcrw.raw_read(f'tcds_n{camtype}',0))
+
+
     print('BYTES43',f'tcds1:{BYTES[43]:08b}')
     print('BYTES44',f'tcds2:{BYTES[44]:08b}')
     print('BYTES45',f'tcds3:{BYTES[45]:08b}')
@@ -321,6 +333,7 @@ while True:
         BYTES[55]|=b[i]*waterdrop[camname]
         i=i+1
     print('BYTES55',f'wdcam3:{BYTES[55]:08b}')
+    print('BYTES8485',BYTES[84:86])
     i=0
     for camname in ['ovss','ovls','pmnss','pmnls','cnssbb','cnssbc','cnssbf','cnlsbb']+['cnlsbc','cnlsbf','ts20f','ts20b','ts4xf','ts4xb','tl20f','tl20b']+['tl4xf','tl4xb','ovtrls','ovtrss']:
         BYTES[60+2*i:60+2*i+2]=struct.pack('>h',camlatency(camname))

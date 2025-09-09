@@ -1,4 +1,4 @@
-#version:id22
+#version:ig01
 #write to memcache when detected all corners responsible by camera
 #wait additional 0.25s after camatpos
 #gf07:
@@ -9,8 +9,23 @@
 #fix y1 instead of yc
 #hb19
 #fix once again y1_-y1<(y2-y1)/10
-#id22
-#always use cv2dnn
+#hk19
+#add blurry score, each camera snapshot 5 times after cross snapshoth
+#reduce "cc" height to 9000
+#hl05
+# use speed_fromplc
+# add datetime to filename of z captures
+# add datetime to photolog
+# blurrylog
+# old version of putText in utils.helper, rename new putText to putText2
+#ic10
+# from log 5 frames to log 10 frames
+#id28
+# output rolling max 5 to plc
+#ie14
+# log max rolling to file
+#ig01
+# add hoistspeed
 builtins_print=print
 from vcutils.helperfun import *
 import sys
@@ -23,6 +38,44 @@ try:
         sys.exit(0)
 except:
     pass
+
+def getspeed(plc):
+    try:
+        return plc.speed_fromplc
+    except:
+        #return plc.speed
+        return 0.0
+#hk19
+from blurdetector.getblurryscore import * 
+def putText2(frame,text,position,thickness=1,color=(255,0,0),font_scale=1,font =  None,line_type = None,shadow=0):
+    if line_type is None:
+        line_type=cv2.LINE_AA
+    if font is None:
+        font=cv2.FONT_HERSHEY_SIMPLEX
+    WHITE=(255,255,255)
+    text_size, _ = cv2.getTextSize(text,  cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)
+    line_height = text_size[1] + 5
+    x, y0 = position
+    for i, line in enumerate(text.split("\n")):            
+        y = y0 + i * line_height
+        if shadow:
+            cv2.putText(frame,
+                        line,
+                        (x+thickness, y+thickness),
+                        font,
+                        font_scale,
+                        WHITE,
+                        thickness,
+                        line_type)
+        cv2.putText(frame,
+                    line,
+                    (x, y),
+                    font,
+                    font_scale,
+                    color,
+                    thickness,
+                    line_type)
+
 
 from armgws.armgws import sendjson
 
@@ -98,6 +151,25 @@ mcrw.raw_write('tcds_cb',0)
 mcrw.raw_write('tcds_cc',0)
 mcrw.raw_write('tcds_tf',0)
 mcrw.raw_write('tcds_tb',0)
+
+#id28
+mcrw.raw_write('tcds_ncf',0)
+mcrw.raw_write('tcds_ncb',0)
+mcrw.raw_write('tcds_ncc',0)
+mcrw.raw_write('tcds_ntf',0)
+mcrw.raw_write('tcds_ntb',0)
+
+class C__maxrolling:
+    def __init__(self,window):
+        self.data=[]
+        self.max=0
+        self.window=window
+    def add(self,x):
+        self.data.append(x)
+        self.data=self.data[-self.window:]
+        self.max=max(self.max,sum(self.data))
+
+
 cornermap=dict()
 cornermap[20,'cnlsbf']=(2,3)
 cornermap[20,'cnlsbb']=(4,1)
@@ -206,7 +278,19 @@ if 1:
     snapshoth['tb']=[4500]
     snapshoth['cf']=[11000,11800]
     snapshoth['cb']=[11000]
-    snapshoth['cc']=[9500]
+    snapshoth['cc']=[8500]
+
+    numsnapshot=dict()
+    numsnapshot['t']=0
+    numsnapshot['tf']=0
+    numsnapshot['tb']=0
+    numsnapshot['cf']=0
+    numsnapshot['cb']=0
+    numsnapshot['cc']=0
+    d__maxrolling=dict()
+    for camtype in ['tf','tb','cf','cb','cc']:
+        d__maxrolling[camtype]=C__maxrolling(5)
+
     camtypes=dict()
     for camname in camnames:
         if camname.startswith('t') and camname.endswith('f'): camtypes[camname] = 'tf'
@@ -244,10 +328,10 @@ if 1:
             camtype=camtypes[camname]
             mcrw.raw_write('tcds_active', time.time())
             frame = cam[camname].copy()
+            blurryscore=getblurryscore(frame)
             frame_cpy = frame.copy()
             tmp = mcrw.raw_read(f'{camname}lastrawupdate', 0)
-            cv2.putText(frame_cpy, f'\ntpos:{tpos}', (0, 0), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                            (255, 0, 0), 2)
+            putText2(frame_cpy, f'\n{DATE} {TIME}\ntpos:{tpos}\nest_speed:{plc.speed}\nspeed:{getspeed(plc)}\nbscore:{blurryscore}', (0, 0), color=(255, 0, 0), shadow=1, thickness=2)
             tocontinue=0
             #gf07
             if tpos not in [0,11]:
@@ -271,8 +355,12 @@ if 1:
                         _corners=''.join(map(str,cornermap[SIZE,camname,_i+1]))
                     else:
                         _corners=''.join(map(str,cornermap[SIZE,camname]))
+
+                    #hk19: disable old logging
                     makedirsimwrite(f'{PHOTOLOGDIRNAME}/y/{camname}_corners_{_corners}_height_{int(lastheight)}_{int(currheight)}.jpg', frame)
             
+
+
             if SIZE==45:
                 def proc1(phase=0):
                     print('proc1')
@@ -450,7 +538,7 @@ if 1:
                         xc = (x1 + x2)/2
                         yc = (y1 + y2)/2
                         results.append(['c2', 1, [xc, yc, x2 - x1, y2 - y1]])
-
+            camscores_cc=[]
             for result in results:
                 name = result[0]
                 if type(name) == bytes:
@@ -458,6 +546,10 @@ if 1:
                 prob = result[1]
                 xc = int(result[2][0])
                 yc = int(result[2][1])
+
+                if name!='c2':
+                    camscores_cc.append([xc,yc,prob])
+
                 boxh = int(result[2][3] / 2)
                 boxw = int(result[2][2] / 2)
                 x1 = max(xc - boxw,0)
@@ -558,7 +650,32 @@ if 1:
                         if x not in negstoredetection[camname]:
                             negstoredetection[camname][x]=[DATE,TIME,frame_cpy,frame,xc,yc]
                 else:
-                    raise Exception('Should never reach here')            
+                    raise Exception('Should never reach here')
+
+            for _i,_snapshoth in enumerate(snapshoth[camtype][:1]):
+                if plc.TLOCK and plc.speed>0 and currheight>=_snapshoth and numsnapshot[camtype]<10:
+                    if SIZE==45 and camtype=='cf':
+                        CFand45=1
+                        _corners=''.join(map(str,cornermap[SIZE,camname,_i+1]))
+                    else:
+                        CFand45=0
+                        _corners=''.join(map(str,cornermap[SIZE,camname]))
+                    makedirsimwrite(f'{PHOTOLOGDIRNAME}/z/{camname}_{DATE}_{TIME}_corners_{_corners}_height_{int(lastheight)}_{int(currheight)}.jpg', frame_cpy)
+                    numsnapshot[camtype]+=1
+                    totalcorners=1 if CFand45 else len(set(_corners)) 
+                    cornerscaptured=len(camscores_cc)>=totalcorners
+                    print('len(camscores_cc)',len(camscores_cc))
+                    print('totalcorners',totalcorners)
+                    print(f'd__maxrolling[{camtype}].add({cornerscaptured})')
+                    d__maxrolling[camtype].add(cornerscaptured)
+                    print(f'd__maxrolling[{camtype}].max =',d__maxrolling[camtype].max)
+                    mcrw.raw_write(f'tcds_n{camtype}',d__maxrolling[camtype].max)
+                    if numsnapshot[camtype]==10:
+                        MAXROLLING_LOGFILENAME=f'/opt/captures/TCDS/maxrolling_logs/{JOBDATE}.txt'
+                        printandlog(f'{JOBDATE}_{JOBTIME}',camname,SIZE,_corners,d__maxrolling[camtype].max,getspeed(plc),file=makedirsopen(MAXROLLING_LOGFILENAME,'a'),sep="\t")
+                    camscores_cc_string=':'.join(list(f'{x},{y},{prob:.2f}' for (x,y,prob) in sorted(camscores_cc)))
+                    printandlog(f'{JOBDATE}_{JOBTIME}', f'{DATE}_{TIME}', camname, SIZE, _corners, currheight, plc.speed, getspeed(plc), camscores_cc_string, blurryscore, file=makedirsopen(BLOGFILENAME, 'a'), sep="\t")
+
             assignimage(imshow[camname],frame_cpy)
         lasttcds_statebf=tcds_statebf
         lasttcds_statec=tcds_statec
