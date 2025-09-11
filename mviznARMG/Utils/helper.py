@@ -1,4 +1,4 @@
-#version:ig01
+#version:ii10
 #fk14-atpostxt return False if fail
 #gd21-atpostxt wrap
 #gh16-plc.data
@@ -6,6 +6,7 @@
 #ic24-atpostxt tolerance change from 0.1 to 1
 #ig01-speed_fromplc
 #ig01-log response of ptz
+#ii10-memleakfix for waittillvalidimage
 
 from io import StringIO
 import traceback
@@ -845,12 +846,13 @@ def waittillvalidimage(f,timeout=0.1):
     T=time.time()
     while True:
         if time.time()-T>=timeout:
-            print('timeout', time.time() - T)
-            return 0            
-        try:            
-            if open(f,'rb').read()[-2:]==b'\xff\xd9':
-                print('waited',time.time()-T)            
-                return 1
+            print1('timeout', time.time() - T)
+            return 0
+        try:
+            with open(f,'rb') as fh:
+                if fh.read()[-2:]==b'\xff\xd9':
+                    print1('waited',time.time()-T)
+                    return 1
         except:
             pass
         time.sleep(0.001)

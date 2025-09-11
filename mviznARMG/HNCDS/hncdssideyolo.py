@@ -1,6 +1,8 @@
-#version:id22
+#version:ii10
 #id22
-#. use cv2dnn
+#  use cv2dnn
+#ii10
+#  memleakfix
 from collections import defaultdict
 from datetime import datetime, timedelta
 import time
@@ -39,6 +41,14 @@ while True:
                 print('invalid image')
                 continue
             print(1)
+            try:
+                del frame
+            except:
+                pass
+            try:
+                del res
+            except:
+                pass
             frame=cv2.imread(f)
             frame.shape
             print(2)
